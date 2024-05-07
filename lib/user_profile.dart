@@ -153,25 +153,51 @@ class _UserProfileState extends State<UserProfile> {
                                 )
                               ],
                             ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Divider(height:1),
+                            const SizedBox(
+                              height: 10,
+                            ),                            
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EditUserProfile()),
+                                      );
+                                    },
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Set the desired border radius
+                                    child: Container(
+                                      width: 120,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            147, 30, 139, 1),
+                                        border: Border.all(
+                                            color: const Color.fromRGBO(
+                                                147, 30, 139, 1),
+                                            width: 2), // Add a border
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Same value as InkWell's borderRadius
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Edit User',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ]),
                           ],
-                        ),
-                        
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        ElevatedButton(
-                          child: const Text(
-                            'Edit User',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const EditUserProfile()),
-                            );
-                          },
                         ),
                       ],
                     ),

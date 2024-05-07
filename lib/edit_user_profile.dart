@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobile_app/user_profile.dart';
 
 class EditUserProfile extends StatefulWidget {
   const EditUserProfile({super.key});
@@ -8,6 +12,29 @@ class EditUserProfile extends StatefulWidget {
 }
 
 class _EditUserProfileState extends State<EditUserProfile> {
+  File? _image; // Store the picked image
+  final _picker = ImagePicker();
+
+  Future<void> _cameraImagePicker() async {
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.camera);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
+  }
+
+  Future<void> _openImagePicker() async {
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -22,7 +49,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
               child: Stack(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height,
+                    height: MediaQuery.of(context).size.height * 1.5,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
@@ -57,6 +84,21 @@ class _EditUserProfileState extends State<EditUserProfile> {
                         backgroundImage: NetworkImage(
                             "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKfW83kzKnkiFOVLmKQ2sdlAiATvqWYfdRx2Q8UNlxUkyq9lyrO5KuyWhcxw&s"),
                       )),
+                  Positioned(
+                    top: MediaQuery.sizeOf(context).height * 0.25,
+                    left: MediaQuery.sizeOf(context).width * 0.62,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundColor: const Color.fromRGBO(147, 30, 139, 1),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.camera,
+                          color: Colors.white,
+                        ),
+                        onPressed: _openImagePicker,
+                      ),
+                    ),
+                  ),
                   Positioned(
                     top: MediaQuery.sizeOf(context).height * 0.43,
                     right: 20,
@@ -98,21 +140,17 @@ class _EditUserProfileState extends State<EditUserProfile> {
                               border: UnderlineInputBorder(),
                               labelText: 'Social',
                             )),
+                        const SizedBox(
+                          height: 30,
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Social",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 InkWell(
-                                  onTap: () async {
+                                  onTap: () {
                                     if (_formKey.currentState!.validate()) {
                                       // If the form is valid, display a snackbar. In the real world,
                                       // you'd often call a server or save the information in a database.
@@ -123,24 +161,125 @@ class _EditUserProfileState extends State<EditUserProfile> {
                                       );
                                     }
                                   },
-                                  child: const Text(
-                                    "Submit",
+                                  borderRadius: BorderRadius.circular(
+                                      20), // Set the desired border radius
+                                  child: Container(
+                                    width: 120,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          const Color.fromRGBO(147, 30, 139, 1),
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              147, 30, 139, 1),
+                                          width: 2), // Add a border
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Same value as InkWell's borderRadius
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'Submit',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
                                   ),
                                 ),
                                 InkWell(
-                                  onTap: () async {Navigator.pop(context);},
-                                  child: const Text(
-                                    "User Profile",
+                                  onTap: () async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const UserProfile()),
+                                    );
+                                  },
+                                  borderRadius: BorderRadius.circular(
+                                      20), // Set the desired border radius
+                                  child: Container(
+                                    width: 120,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      color:
+                                          const Color.fromRGBO(147, 30, 139, 1),
+                                      border: Border.all(
+                                          color: const Color.fromRGBO(
+                                              147, 30, 139, 1),
+                                          width: 2), // Add a border
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Same value as InkWell's borderRadius
+                                    ),
+                                    child: const Center(
+                                      child: Text(
+                                        'User Profile',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      showDialog<String>(
+                                          context: context,                                          
+                                          builder: (BuildContext context) =>
+                                              AlertDialog(
+                                                alignment: Alignment.bottomCenter,
+                                                insetPadding: const EdgeInsets.symmetric(horizontal: 100),
+                                                actions: <Widget>[
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                      Icons.camera,
+                                                      color: Colors.black,
+                                                    ),
+                                                    onPressed:
+                                                        _cameraImagePicker,
+                                                  ),
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                        Icons.browse_gallery,
+                                                        color: Colors.black),
+                                                    onPressed: _openImagePicker,
+                                                  ),
+                                                ],
+                                              ));
+                                    },
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Set the desired border radius
+                                    child: Container(
+                                      width: 120,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            147, 30, 139, 1),
+                                        border: Border.all(
+                                            color: const Color.fromRGBO(
+                                                147, 30, 139, 1),
+                                            width: 2), // Add a border
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Same value as InkWell's borderRadius
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Camera',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ])
                           ],
                         ),
                         const SizedBox(
                           height: 10,
-                        ),                       
-
+                        ),
+                        if (_image != null) Image.file(_image!),
                       ],
                     ),
                   ),
