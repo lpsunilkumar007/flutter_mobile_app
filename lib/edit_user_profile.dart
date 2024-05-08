@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_app/user_profile.dart';
+import 'package:mobile_app/datatable_profile.dart';
 
 class EditUserProfile extends StatefulWidget {
   const EditUserProfile({super.key});
@@ -41,12 +41,11 @@ class _EditUserProfileState extends State<EditUserProfile> {
 
       if (cropper != null) {
         setState(() {
-          _image = File(cropper.path ?? "");
+          _image = File(cropper.path);
         });
       }
     }
   }
-
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -213,80 +212,76 @@ class _EditUserProfileState extends State<EditUserProfile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      // If the form is valid, display a snackbar. In the real world,
-                                      // you'd often call a server or save the information in a database.
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text('Processing Data')),
-                                      );
-                                    }
-                                  },
-                                  borderRadius: BorderRadius.circular(
-                                      20), // Set the desired border radius
-                                  child: Container(
-                                    width: 120,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromRGBO(147, 30, 139, 1),
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              147, 30, 139, 1),
-                                          width: 2), // Add a border
-                                      borderRadius: BorderRadius.circular(
-                                          20), // Same value as InkWell's borderRadius
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        'Submit',
-                                        style: TextStyle(color: Colors.white),
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      if (_formKey.currentState!.validate()) {
+                                         Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const DataTableExample()));  
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Set the desired border radius
+                                    child: Container(
+                                      width: 120,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            147, 30, 139, 1),
+                                        border: Border.all(
+                                            color: const Color.fromRGBO(
+                                                147, 30, 139, 1),
+                                            width: 2), // Add a border
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Same value as InkWell's borderRadius
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Submit',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                InkWell(
-                                  onTap: () async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const UserProfile()),
-                                    );
-                                  },
-                                  borderRadius: BorderRadius.circular(
-                                      20), // Set the desired border radius
-                                  child: Container(
-                                    width: 120,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromRGBO(147, 30, 139, 1),
-                                      border: Border.all(
-                                          color: const Color.fromRGBO(
-                                              147, 30, 139, 1),
-                                          width: 2), // Add a border
-                                      borderRadius: BorderRadius.circular(
-                                          20), // Same value as InkWell's borderRadius
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        'User Profile',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
+                                  // InkWell(
+                                  //   onTap: () async {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) =>
+                                  //               const UserProfile()),
+                                  //     );
+                                  //   },
+                                  //   borderRadius: BorderRadius.circular(
+                                  //       20), // Set the desired border radius
+                                  //   child: Container(
+                                  //     width: 120,
+                                  //     height: 50,
+                                  //     decoration: BoxDecoration(
+                                  //       color: const Color.fromRGBO(
+                                  //           147, 30, 139, 1),
+                                  //       border: Border.all(
+                                  //           color: const Color.fromRGBO(
+                                  //               147, 30, 139, 1),
+                                  //           width: 2), // Add a border
+                                  //       borderRadius: BorderRadius.circular(
+                                  //           20), // Same value as InkWell's borderRadius
+                                  //     ),
+                                  //     child: const Center(
+                                  //       child: Text(
+                                  //         'User Profile',
+                                  //         style: TextStyle(color: Colors.white),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                               
+                                ]),
                           ],
                         ),
                       ],
