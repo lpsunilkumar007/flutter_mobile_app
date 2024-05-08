@@ -16,16 +16,6 @@ class _EditUserProfileState extends State<EditUserProfile> {
   File? _image; // Store the picked image
   final _picker = ImagePicker();
 
-  // Future<void> _cameraImagePicker() async {
-  //   final XFile? pickedImage =
-  //       await _picker.pickImage(source: ImageSource.camera);
-  //   if (pickedImage != null) {
-  //     setState(() {
-  //       _image = File(pickedImage.path);
-  //     });
-  //   }
-  // }
-
   Future<void> imageCropper(ImageSource source) async {
     XFile? images = await _picker.pickImage(source: source);
     if (images != null) {
@@ -57,15 +47,6 @@ class _EditUserProfileState extends State<EditUserProfile> {
     }
   }
 
-  // Future<void> _openImagePicker() async {
-  //   final XFile? pickedImage =
-  //       await _picker.pickImage(source: ImageSource.gallery);
-  //   if (pickedImage != null) {
-  //     setState(() {
-  //       _image = File(pickedImage.path);
-  //     });
-  //   }
-  // }
 
   final _formKey = GlobalKey<FormState>();
   @override
@@ -115,7 +96,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                         // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CircleAvatar(
-                            radius: 80.0, // Adjust the size as needed
+                            radius: 82.0, // Adjust the size as needed
                             backgroundImage: _image != null
                                 ? Image.file(_image!).image
                                 : const NetworkImage(
@@ -135,13 +116,17 @@ class _EditUserProfileState extends State<EditUserProfile> {
                           color: Colors.white,
                         ),
                         onPressed: () {
-                          showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    alignment: Alignment.bottomCenter,
-                                    insetPadding: const EdgeInsets.symmetric(
-                                        horizontal: 100),
-                                    actions: <Widget>[
+                          showModalBottomSheet<void>(
+                            context: context,
+                            backgroundColor: Colors.white,
+                            builder: (BuildContext context) {
+                              return SizedBox(
+                                height: 100,
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
                                       IconButton(
                                         icon: const Icon(
                                           Icons.camera,
@@ -149,17 +134,33 @@ class _EditUserProfileState extends State<EditUserProfile> {
                                         ),
                                         onPressed: () {
                                           imageCropper(ImageSource.camera);
+                                          Navigator.pop(context);
                                         },
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.browse_gallery_sharp,
+                                        icon: const Icon(Icons.image,
                                             color: Colors.black),
                                         onPressed: () {
                                           imageCropper(ImageSource.gallery);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete,
+                                            color: Colors.black),
+                                        onPressed: () {
+                                          setState(() {
+                                            _image = null;
+                                          });
+                                          Navigator.pop(context);
                                         },
                                       ),
                                     ],
-                                  ));
+                                  ),
+                                ),
+                              );
+                            },
+                          );
                         },
                       ),
                     ),
@@ -288,10 +289,6 @@ class _EditUserProfileState extends State<EditUserProfile> {
                             ),
                           ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // if (_image != null) Image.file(_image!),
                       ],
                     ),
                   ),
