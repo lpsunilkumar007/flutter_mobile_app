@@ -1,6 +1,13 @@
-import 'package:auto_route/annotations.dart';
+import 'dart:convert';
+
+import 'package:auto_route/auto_route.dart';
 import 'package:editable/editable.dart';
 import 'package:flutter/material.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:mobile_app/routes/app_route.gr.dart';
+import 'package:mobile_app/values/app_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 @RoutePage()
 class GridViewPage extends StatefulWidget {
@@ -9,40 +16,73 @@ class GridViewPage extends StatefulWidget {
   State<GridViewPage> createState() => _DataTableState();
 }
 
+var url = Uri.https(AppApi.baseUrl, AppApi.employee);
+
 class _DataTableState extends State<GridViewPage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  var url = Uri.https(AppApi.baseUrl, AppApi.employee);
+  List rows = [];
+  Future<void> fetchData() async {
+    final storage = await SharedPreferences.getInstance();
+    var accessToken = await storage.getString('access_token');
+    bool authenticated = !JwtDecoder.isExpired(accessToken!);
+    if (authenticated) {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      var parsedData = json.decode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          var data = (parsedData["data"]);
+          for (var ii in data) {
+            rows.add(
+              {
+                "id": ii["id"],
+                "firstName": ii["firstName"],
+                "lastName": ii["lastName"],
+                "age": ii["age"],
+                "role": ii["role"],
+                "email": ii["email"],
+                "username": ii["username"],
+              },
+            );
+          }
+        });
+      } else if (response.statusCode == 403 || response.statusCode == 401) {
+        context.router.push(LoginRoute(onResult: (bool) {}));
+      }
+    } else {
+      print("qwqweqwqwewqqwewqewq");
+      context.router.push(LoginRoute(onResult: (bool) {}));
+    }
+  }
+
+  _save() async {
+    print("object123123123");
+    final storage = await SharedPreferences.getInstance();
+  }
+
   /// Create a Key for EditableState
   final _editableKey = GlobalKey<EditableState>();
-  List rows = [
-    {
-      "name": 'James Joe',
-      "date": '23/09/2020',
-      "month": 'June',
-      "status": 'completed'
-    },
-    {
-      "name": 'Daniel Paul',
-      "month": 'March',
-      "status": 'new',
-      "date": '12/4/2020',
-    },
-    {
-      "month": 'May',
-      "name": 'Mark Zuckerberg',
-      "date": '09/4/1993',
-      "status": 'expert'
-    },
-    {
-      "name": 'Jack',
-      "status": 'legend',
-      "date": '01/7/1820',
-      "month": 'December',
-    },
-  ];
+
   List cols = [
-    {"title": 'Name', 'widthFactor': 0.2, 'key': 'name', 'editable': false},
-    {"title": 'Date', 'widthFactor': 0.2, 'key': 'date'},
-    {"title": 'Month', 'widthFactor': 0.2, 'key': 'month'},
-    {"title": 'Status', 'key': 'status'},
+    {"title": 'Id', 'widthFactor': 0.3, 'key': 'id', 'editable': false},
+    {"title": 'First Name', 'widthFactor': 0.3, 'key': 'firstName'},
+    {"title": 'Last Name', 'widthFactor': 0.3, 'key': 'lastName'},
+    {"title": 'User Name', 'widthFactor': 0.3, 'key': 'username'},
+    {"title": 'Age', 'widthFactor': 0.3, 'key': 'age'},
+    {"title": 'Role', 'widthFactor': 0.3, 'key': 'role'},
+    {"title": 'Email', 'widthFactor': 0.3, 'key': 'email'},
   ];
   @override
   Widget build(BuildContext context) {
@@ -58,15 +98,19 @@ class _DataTableState extends State<GridViewPage> {
         borderWidth: 1,
         rows: rows,
         zebraStripe: false,
-        onRowSaved: (value) {},
-        onSubmitted: (value) {},
+        onRowSaved: (value) {
+          _save();
+        },
+        onSubmitted: (value) {
+          _save();
+        },
         tdStyle: const TextStyle(fontSize: 16),
         trHeight: 80,
         thStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         thAlignment: TextAlign.center,
         thVertAlignment: CrossAxisAlignment.center,
         thPaddingBottom: 2,
-        showSaveIcon: false,
+        showSaveIcon: true,
         saveIconColor: Colors.black,
         showCreateButton: false,
         tdAlignment: TextAlign.left,

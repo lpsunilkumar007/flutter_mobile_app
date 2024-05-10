@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
 class LoginPage extends StatefulWidget {
-  const LoginPage({required this.onResult});
+  const LoginPage({super.key, required this.onResult});
   final Function(bool) onResult;
 
   @override
@@ -23,7 +23,6 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController(text: "P@ssw0rd");
 
   var url = Uri.https(AppApi.baseUrl, AppApi.login);
-
   _login(BuildContext context) async {
     final storage = await SharedPreferences.getInstance();
     var response = await http.post(
@@ -50,7 +49,6 @@ class _LoginPageState extends State<LoginPage> {
 
   bool passwordNotifier = true;
   final ValueNotifier<bool> fieldValidNotifier = ValueNotifier(false);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

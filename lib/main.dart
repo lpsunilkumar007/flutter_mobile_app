@@ -1,5 +1,6 @@
 // ignore: unused_import
-import 'package:mobile_app/screens/login_page.dart';
+import 'package:mobile_app/routes/app_route.gr.dart';
+import 'package:mobile_app/screens/edit_user.dart';
 import 'package:mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 
@@ -44,14 +45,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    // LoginPage(
-    //   onResult: success,
-    // ),
-    //UserProfile(),
-    // EditUserProfile(),
-    // DataTableExample(),
-  ];
+  static const List<Widget> _widgetOptions = <Widget>[EditUserPage()];
 
   void _onItemTapped(int index) {
     setState(() {

@@ -6,10 +6,10 @@ import 'app_route.gr.dart';
 class AppRoute extends $AppRoute {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(
-            page: EditUserRoute.page, initial: true, guards: [AuthGuard()]),
+        AutoRoute(page: EditUserRoute.page, guards: [AuthGuard()]),
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: GridViewRoute.page, guards: [AuthGuard()]),
+        AutoRoute(page: Keeper.page, initial: true, guards: [AuthGuard()]),
       ];
 }

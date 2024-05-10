@@ -18,7 +18,6 @@ class RegisterPage extends StatefulWidget {
 class _UserProfileState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _usernameCtrl = TextEditingController(text: "Testing");
   final _emailCtrl = TextEditingController(text: "testing@gmail.com");
   final _passwordCtrl = TextEditingController(text: "P@ssw0rd");
   final _age = TextEditingController(text: "21");
@@ -34,7 +33,7 @@ class _UserProfileState extends State<RegisterPage> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, Object>{
-        'username': _usernameCtrl.text,
+        'username': _emailCtrl.text,
         'password': _passwordCtrl.text,
         'email': _emailCtrl.text,
         'age': int.parse(_age.text),
@@ -43,19 +42,20 @@ class _UserProfileState extends State<RegisterPage> {
       }),
     );
     var parsedData = json.decode(response.body);
-
     if (response.statusCode == 200) {
       if (parsedData["status"] == false) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(parsedData["error"]["message"])));
       }
+      print("abcabaaabbabababababa");
+      print(response.body);
       // ignore: use_build_context_synchronously
       String? token = parsedData["data"]["token"];
-      print(token);
-      print("qqqqqqqqqqqqqqqq");
       storage.setString('access_token', token!);
       context.router.push(const EditUserRoute());
     } else {
+      print("ddddddddddddda");
+      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(parsedData["error"]["errors"][0]["message"])));
     }
@@ -74,7 +74,7 @@ class _UserProfileState extends State<RegisterPage> {
               child: Stack(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 1.1,
+                    height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     child: Column(
                       children: [
@@ -130,22 +130,6 @@ class _UserProfileState extends State<RegisterPage> {
                           validator: (value) {
                             if (value!.isEmpty) {
                               return 'Please enter your Last Name';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        TextFormField(
-                          controller: _usernameCtrl,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Username',
-                          ),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your username';
                             }
                             return null;
                           },
