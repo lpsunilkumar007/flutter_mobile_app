@@ -1,13 +1,15 @@
+import 'package:auto_route/annotations.dart';
 import 'package:editable/editable.dart';
 import 'package:flutter/material.dart';
 
-class DataTableExample extends StatefulWidget {
-  const DataTableExample({super.key});
+@RoutePage()
+class GridViewPage extends StatefulWidget {
+  const GridViewPage({super.key});
   @override
-  State<DataTableExample> createState() => _DataTableState();
+  State<GridViewPage> createState() => _DataTableState();
 }
 
-class _DataTableState extends State<DataTableExample> {
+class _DataTableState extends State<GridViewPage> {
   /// Create a Key for EditableState
   final _editableKey = GlobalKey<EditableState>();
   List rows = [

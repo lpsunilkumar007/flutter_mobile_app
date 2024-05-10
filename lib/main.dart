@@ -1,6 +1,6 @@
-import 'package:mobile_app/datatable_profile.dart';
-import 'package:mobile_app/edit_user_profile.dart';
-import 'package:mobile_app/user_profile.dart';
+// ignore: unused_import
+import 'package:mobile_app/screens/login_page.dart';
+import 'package:mobile_app/routes/app_route.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,12 +11,16 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
+  static final _appRouter = AppRoute();
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Drawer Demo',
-      home: MyHomePage(title: 'Drawer'),
+    return MaterialApp.router(
+      routerConfig: _appRouter.config(),
     );
+    // return const MaterialApp(
+    //   title: 'Drawer',
+    //   home: MyHomePage(title: 'Drawer'),
+    // );
   }
 }
 
@@ -41,12 +45,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Welcome ',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
-    ),
-    UserProfile(),
-    EditUserProfile(),
-    DataTableExample(),
+    // LoginPage(
+    //   onResult: success,
+    // ),
+    //UserProfile(),
+    // EditUserProfile(),
+    // DataTableExample(),
   ];
 
   void _onItemTapped(int index) {
@@ -54,6 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

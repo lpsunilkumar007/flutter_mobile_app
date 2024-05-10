@@ -1,20 +1,73 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mobile_app/datatable_profile.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:mobile_app/routes/app_route.gr.dart';
+import 'package:mobile_app/values/app_api.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
-class EditUserProfile extends StatefulWidget {
-  const EditUserProfile({super.key});
+@RoutePage()
+class EditUserPage extends StatefulWidget {
+  const EditUserPage({super.key});
 
   @override
-  State<EditUserProfile> createState() => _EditUserProfileState();
+  State<EditUserPage> createState() => _EditUserProfileState();
 }
 
-class _EditUserProfileState extends State<EditUserProfile> {
+class _EditUserProfileState extends State<EditUserPage> {
   File? _image; // Store the picked image
   final _picker = ImagePicker();
+
+  final _usernameCtrl = TextEditingController();
+  final _emailCtrl = TextEditingController();
+  final _firstName = TextEditingController();
+  final _lastName = TextEditingController();
+  final _age = TextEditingController();
+  final _role = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  var url = Uri.https(AppApi.baseUrl, AppApi.user);
+  Future<void> fetchData() async {
+    final storage = await SharedPreferences.getInstance();
+    var accessToken = await storage.getString('access_token');
+    bool authenticated = !JwtDecoder.isExpired(accessToken!);
+    if (authenticated) {
+      final response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      var parsedData = json.decode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          print(parsedData["data"]);
+          _firstName.text = parsedData["data"]["firstName"];
+          _lastName.text = parsedData["data"]["lastName"];
+          _usernameCtrl.text = parsedData["data"]["username"];
+          _emailCtrl.text = parsedData["data"]["email"];
+          _role.text = parsedData["data"]["role"];
+          var age = parsedData["data"]["age"];
+          _age.text = age.toString();
+        });
+      } else if (response.statusCode == 403 || response.statusCode == 401) {
+        context.router.push(LoginRoute(onResult: (bool) {}));
+      }
+    } else {
+      context.router.push(LoginRoute(onResult: (bool) {}));
+    }
+  }
 
   Future<void> imageCropper(ImageSource source) async {
     XFile? images = await _picker.pickImage(source: source);
@@ -75,15 +128,12 @@ class _EditUserProfileState extends State<EditUserProfile> {
                                   fit: BoxFit.cover)),
                         ),
                         const SizedBox(
-                          height: 100,
+                          height: 90,
                         ),
                         const Text(
-                          "Users",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        const Text(
-                          "Computer Science Student",
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                          "Users Profile",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -165,13 +215,14 @@ class _EditUserProfileState extends State<EditUserProfile> {
                     ),
                   ),
                   Positioned(
-                    top: MediaQuery.sizeOf(context).height * 0.43,
+                    top: MediaQuery.sizeOf(context).height * 0.35,
                     right: 20,
                     left: 20,
                     child: Column(
                       //crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFormField(
+                          controller: _firstName,
                           // The validator receives the text that the user has entered.
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -179,7 +230,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter some text';
+                              return 'Please enter First Name';
                             }
                             return null;
                           },
@@ -187,26 +238,87 @@ class _EditUserProfileState extends State<EditUserProfile> {
                         const SizedBox(
                           height: 10,
                         ),
-                        SizedBox(
-                          child: TextFormField(
-                              initialValue:
-                                  "This is your first Flutter project.",
-                              decoration: const InputDecoration(
-                                border: UnderlineInputBorder(),
-                                labelText: 'Education',
-                              )),
+                        TextFormField(
+                          controller: _lastName,
+                          // The validator receives the text that the user has entered.
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Last Name',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Last Name';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         TextFormField(
-                            initialValue: "",
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Social',
-                            )),
+                          controller: _usernameCtrl,
+                          // The validator receives the text that the user has entered.
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'User Name',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter User Name';
+                            }
+                            return null;
+                          },
+                        ),
                         const SizedBox(
-                          height: 30,
+                          height: 10,
+                        ),
+                        TextFormField(
+                          controller: _emailCtrl,
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Email',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Email';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          controller: _age,
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Age',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter age';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        TextFormField(
+                          controller: _role,
+                          decoration: const InputDecoration(
+                            border: UnderlineInputBorder(),
+                            labelText: 'Role',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter Role';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,11 +330,11 @@ class _EditUserProfileState extends State<EditUserProfile> {
                                   InkWell(
                                     onTap: () {
                                       if (_formKey.currentState!.validate()) {
-                                         Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DataTableExample()));  
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //         builder: (context) =>
+                                        //             const DataTableExample()));
                                       }
                                     },
                                     borderRadius: BorderRadius.circular(
@@ -280,7 +392,6 @@ class _EditUserProfileState extends State<EditUserProfile> {
                                   //     ),
                                   //   ),
                                   // ),
-                               
                                 ]),
                           ],
                         ),
