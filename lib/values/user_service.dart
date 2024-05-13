@@ -35,7 +35,6 @@ class UserService {
         },
       );
       var parsedData = json.decode(response.body);
-      print(response.statusCode);
       if (response.statusCode == 200) {
         try {
           userModel = UserModel(

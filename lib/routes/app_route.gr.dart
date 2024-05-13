@@ -10,9 +10,9 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i6;
 import 'package:flutter/material.dart' as _i7;
-import 'package:mobile_app/screens/drawer.dart' as _i3;
-import 'package:mobile_app/screens/edit_user.dart' as _i1;
-import 'package:mobile_app/screens/grid_view-page.dart' as _i2;
+import 'package:mobile_app/screens/drawer.dart' as _i1;
+import 'package:mobile_app/screens/edit_user.dart' as _i2;
+import 'package:mobile_app/screens/grid_view-page.dart' as _i3;
 import 'package:mobile_app/screens/login_page.dart' as _i4;
 import 'package:mobile_app/screens/register_page.dart' as _i5;
 
@@ -21,22 +21,22 @@ abstract class $AppRoute extends _i6.RootStackRouter {
 
   @override
   final Map<String, _i6.PageFactory> pagesMap = {
+    DrawerRoute.name: (routeData) {
+      return _i6.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const _i1.DrawerPage(),
+      );
+    },
     EditUserRoute.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i1.EditUserPage(),
+        child: const _i2.EditUserPage(),
       );
     },
     GridViewRoute.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i2.GridViewPage(),
-      );
-    },
-    Keeper.name: (routeData) {
-      return _i6.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const _i3.Keeper(),
+        child: const _i3.GridViewPage(),
       );
     },
     LoginRoute.name: (routeData) {
@@ -59,7 +59,21 @@ abstract class $AppRoute extends _i6.RootStackRouter {
 }
 
 /// generated route for
-/// [_i1.EditUserPage]
+/// [_i1.DrawerPage]
+class DrawerRoute extends _i6.PageRouteInfo<void> {
+  const DrawerRoute({List<_i6.PageRouteInfo>? children})
+      : super(
+          DrawerRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DrawerRoute';
+
+  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
+}
+
+/// generated route for
+/// [_i2.EditUserPage]
 class EditUserRoute extends _i6.PageRouteInfo<void> {
   const EditUserRoute({List<_i6.PageRouteInfo>? children})
       : super(
@@ -73,7 +87,7 @@ class EditUserRoute extends _i6.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i2.GridViewPage]
+/// [_i3.GridViewPage]
 class GridViewRoute extends _i6.PageRouteInfo<void> {
   const GridViewRoute({List<_i6.PageRouteInfo>? children})
       : super(
@@ -82,20 +96,6 @@ class GridViewRoute extends _i6.PageRouteInfo<void> {
         );
 
   static const String name = 'GridViewRoute';
-
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
-}
-
-/// generated route for
-/// [_i3.Keeper]
-class Keeper extends _i6.PageRouteInfo<void> {
-  const Keeper({List<_i6.PageRouteInfo>? children})
-      : super(
-          Keeper.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'Keeper';
 
   static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
 }

@@ -29,15 +29,12 @@ class _EditUserProfileState extends State<EditUserPage> {
   final userService = UserService();
   @override
   void initState() {
-    print("aaaaaaaaaaaaaaaa");
     super.initState();
     fetchData();
   }
 
   Future<void> fetchData() async {
     await userService.getData();
-    print("wwwwwwwwwww");
-    print(userService.userProfile?.statuscode);
     if (userService.userProfile?.statuscode == 200) {
       setState(() {
         _firstName.text = userService.userProfile?.FirstName ?? '';
@@ -83,7 +80,19 @@ class _EditUserProfileState extends State<EditUserPage> {
     }
   }
 
+  bool readOnly = true;
+  Future<void> EditUser() async {
+    setState(() {
+      if (readOnly) {
+        readOnly = false;
+      } else {
+        readOnly = true;
+      }
+    });
+  }
+
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,11 +122,24 @@ class _EditUserProfileState extends State<EditUserPage> {
                         const SizedBox(
                           height: 90,
                         ),
-                        const Text(
-                          "Users Profile",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "${userService.userProfile?.FirstName ?? ""} ${userService.userProfile?.LastName ?? ""}",
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  EditUser();
+                                },
+                              ),
+                            ])
                       ],
                     ),
                   ),
@@ -205,7 +227,7 @@ class _EditUserProfileState extends State<EditUserPage> {
                       //crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextFormField(
-                          readOnly: true,
+                          readOnly: readOnly,
                           controller: _firstName,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -222,7 +244,7 @@ class _EditUserProfileState extends State<EditUserPage> {
                           height: 10,
                         ),
                         TextFormField(
-                          readOnly: true,
+                          readOnly: readOnly,
                           controller: _lastName,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -239,7 +261,7 @@ class _EditUserProfileState extends State<EditUserPage> {
                           height: 10,
                         ),
                         TextFormField(
-                          readOnly: true,
+                          readOnly: readOnly,
                           controller: _usernameCtrl,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -256,7 +278,7 @@ class _EditUserProfileState extends State<EditUserPage> {
                           height: 10,
                         ),
                         TextFormField(
-                          readOnly: true,
+                          readOnly: readOnly,
                           controller: _emailCtrl,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -273,7 +295,7 @@ class _EditUserProfileState extends State<EditUserPage> {
                           height: 10,
                         ),
                         TextFormField(
-                          readOnly: true,
+                          readOnly: readOnly,
                           controller: _age,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -290,7 +312,7 @@ class _EditUserProfileState extends State<EditUserPage> {
                           height: 10,
                         ),
                         TextFormField(
-                          readOnly: true,
+                          readOnly: readOnly,
                           controller: _role,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -306,78 +328,78 @@ class _EditUserProfileState extends State<EditUserPage> {
                         const SizedBox(
                           height: 10,
                         ),
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     Row(
-                        //         mainAxisAlignment:
-                        //             MainAxisAlignment.spaceEvenly,
-                        //         children: [
-                        //           InkWell(
-                        //             onTap: () {
-                        //               if (_formKey.currentState!.validate()) {
-                        //                 context.router
-                        //                     .push(const EditUserRoute());
-                        //               }
-                        //             },
-                        //             borderRadius: BorderRadius.circular(
-                        //                 20), // Set the desired border radius
-                        //             child: Container(
-                        //               width: 120,
-                        //               height: 50,
-                        //               decoration: BoxDecoration(
-                        //                 color: const Color.fromRGBO(
-                        //                     147, 30, 139, 1),
-                        //                 border: Border.all(
-                        //                     color: const Color.fromRGBO(
-                        //                         147, 30, 139, 1),
-                        //                     width: 2), // Add a border
-                        //                 borderRadius: BorderRadius.circular(
-                        //                     20), // Same value as InkWell's borderRadius
-                        //               ),
-                        //               child: const Center(
-                        //                 child: Text(
-                        //                   'Submit',
-                        //                   style: TextStyle(color: Colors.white),
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //           ),
-                        //           // InkWell(
-                        //           //   onTap: () async {
-                        //           //     Navigator.push(
-                        //           //       context,
-                        //           //       MaterialPageRoute(
-                        //           //           builder: (context) =>
-                        //           //               const UserProfile()),
-                        //           //     );
-                        //           //   },
-                        //           //   borderRadius: BorderRadius.circular(
-                        //           //       20), // Set the desired border radius
-                        //           //   child: Container(
-                        //           //     width: 120,
-                        //           //     height: 50,
-                        //           //     decoration: BoxDecoration(
-                        //           //       color: const Color.fromRGBO(
-                        //           //           147, 30, 139, 1),
-                        //           //       border: Border.all(
-                        //           //           color: const Color.fromRGBO(
-                        //           //               147, 30, 139, 1),
-                        //           //           width: 2), // Add a border
-                        //           //       borderRadius: BorderRadius.circular(
-                        //           //           20), // Same value as InkWell's borderRadius
-                        //           //     ),
-                        //           //     child: const Center(
-                        //           //       child: Text(
-                        //           //         'User Profile',
-                        //           //         style: TextStyle(color: Colors.white),
-                        //           //       ),
-                        //           //     ),
-                        //           //   ),
-                        //           // ),
-                        //         ]),
-                        //   ],
-                        // ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        context.router
+                                            .push(const EditUserRoute());
+                                      }
+                                    },
+                                    borderRadius: BorderRadius.circular(
+                                        20), // Set the desired border radius
+                                    child: Container(
+                                      width: 120,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromRGBO(
+                                            147, 30, 139, 1),
+                                        border: Border.all(
+                                            color: const Color.fromRGBO(
+                                                147, 30, 139, 1),
+                                            width: 2), // Add a border
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Same value as InkWell's borderRadius
+                                      ),
+                                      child: const Center(
+                                        child: Text(
+                                          'Submit',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  // InkWell(
+                                  //   onTap: () async {
+                                  //     Navigator.push(
+                                  //       context,
+                                  //       MaterialPageRoute(
+                                  //           builder: (context) =>
+                                  //               const UserProfile()),
+                                  //     );
+                                  //   },
+                                  //   borderRadius: BorderRadius.circular(
+                                  //       20), // Set the desired border radius
+                                  //   child: Container(
+                                  //     width: 120,
+                                  //     height: 50,
+                                  //     decoration: BoxDecoration(
+                                  //       color: const Color.fromRGBO(
+                                  //           147, 30, 139, 1),
+                                  //       border: Border.all(
+                                  //           color: const Color.fromRGBO(
+                                  //               147, 30, 139, 1),
+                                  //           width: 2), // Add a border
+                                  //       borderRadius: BorderRadius.circular(
+                                  //           20), // Same value as InkWell's borderRadius
+                                  //     ),
+                                  //     child: const Center(
+                                  //       child: Text(
+                                  //         'User Profile',
+                                  //         style: TextStyle(color: Colors.white),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                ]),
+                          ],
+                        ),
                       ],
                     ),
                   ),

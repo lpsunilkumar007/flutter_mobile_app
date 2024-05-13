@@ -10,6 +10,6 @@ class AppRoute extends $AppRoute {
         AutoRoute(page: RegisterRoute.page),
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: GridViewRoute.page, guards: [AuthGuard()]),
-        AutoRoute(page: Keeper.page, initial: true, guards: [AuthGuard()]),
+        AutoRoute(page: DrawerRoute.page, initial: true, guards: [AuthGuard()]),
       ];
 }

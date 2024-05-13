@@ -26,8 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   var url = Uri.https(AppApi.baseUrl, AppApi.login);
   _login(BuildContext context) async {
     final storage = await SharedPreferences.getInstance();
-    var accessToken = await storage.getString('access_token');
-    print(accessToken);
     var response = await http.post(
       url,
       headers: <String, String>{
@@ -39,14 +37,12 @@ class _LoginPageState extends State<LoginPage> {
       }),
     );
     var parsedData = json.decode(response.body);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       String? token = parsedData["data"]["token"];
-      print(token);
       await storage.setString('access_token', token!);
       //
       widget.onResult(true);
-      context.router.push(const Keeper());
+      context.router.push(const DrawerRoute());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(parsedData["error"]["message"])));

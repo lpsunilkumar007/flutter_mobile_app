@@ -9,13 +9,13 @@ import 'package:mobile_app/values/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
-class Keeper extends StatefulWidget {
-  const Keeper({super.key});
+class DrawerPage extends StatefulWidget {
+  const DrawerPage({super.key});
   @override
-  State<Keeper> createState() => _MyHomePageState();
+  State<DrawerPage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<Keeper> {
+class _MyHomePageState extends State<DrawerPage> {
   final userService = UserService();
 
   int _selectedIndex = 0;
@@ -33,7 +33,6 @@ class _MyHomePageState extends State<Keeper> {
 
   @override
   void initState() {
-    print("start22222222222");
     super.initState();
     fetchData();
   }
@@ -50,22 +49,25 @@ class _MyHomePageState extends State<Keeper> {
     setState(() {});
   }
 
-  // void _logout() async {
-  //   final storage = await SharedPreferences.getInstance();
-  //   var accessTokens = await storage.getString('access_token');
-  //   print("222222222");
-  //   print(accessTokens);
-  //   storage.clear();
-  //   var accessToken = await storage.getString('access_token');
-  //   print("111111111111111");
-  //   print(accessToken);
-  //   context.router.push(LoginRoute(onResult: (bool) {}));
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("User")),
+      // appBar: AppBar(
+      //   backgroundColor: AppColors.primaryColor,
+      //   title: Text(
+      //       "${userService.userProfile?.FirstName ?? ""} ${userService.userProfile?.LastName ?? ""}",
+      //       overflow: TextOverflow.ellipsis,
+      //       selectionColor: AppColors.primaryColor),
+      // ),
+      appBar: AppBar(
+        title: Text(
+          "${userService.userProfile?.FirstName ?? ""} ${userService.userProfile?.LastName ?? ""}",
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      extendBodyBehindAppBar: true,
       body: Center(
         child: _widgetOptions[_selectedIndex],
       ),
@@ -79,15 +81,15 @@ class _MyHomePageState extends State<Keeper> {
                 ),
                 child: Column(children: [
                   Text(
-                    userService.userProfile?.UserName ?? "",
-                    style: TextStyle(color: Colors.white),
+                    "${userService.userProfile?.FirstName ?? ""} ${userService.userProfile?.LastName ?? ""}",
+                    style: const TextStyle(color: Colors.black),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   ListTile(
                       trailing: const Text(
                         'Log Out',
                         style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 16),
                       ),
