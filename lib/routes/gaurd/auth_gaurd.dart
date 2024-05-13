@@ -11,7 +11,7 @@ class AuthGuard extends AutoRouteGuard {
     String? accessToken = await storage.getString('access_token');
     bool authenticated = false;
     if (accessToken != null) {
-      authenticated = JwtDecoder.isExpired(accessToken);
+      authenticated = !JwtDecoder.isExpired(accessToken);
     }
     if (authenticated) {
       resolver.next(true);

@@ -36,7 +36,7 @@ abstract class $AppRoute extends _i6.RootStackRouter {
     Keeper.name: (routeData) {
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i3.Keeper(),
+        child: const _i3.Keeper(),
       );
     },
     LoginRoute.name: (routeData) {

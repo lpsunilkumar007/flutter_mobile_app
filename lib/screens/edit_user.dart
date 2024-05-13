@@ -1,15 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:mobile_app/routes/app_route.gr.dart';
-import 'package:mobile_app/values/app_api.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+import 'package:mobile_app/values/user_service.dart';
 
 @RoutePage()
 class EditUserPage extends StatefulWidget {
@@ -29,40 +25,28 @@ class _EditUserProfileState extends State<EditUserPage> {
   final _lastName = TextEditingController();
   final _age = TextEditingController();
   final _role = TextEditingController();
+
+  final userService = UserService();
   @override
   void initState() {
+    print("aaaaaaaaaaaaaaaa");
     super.initState();
     fetchData();
   }
 
-  var url = Uri.https(AppApi.baseUrl, AppApi.user);
   Future<void> fetchData() async {
-    final storage = await SharedPreferences.getInstance();
-    var accessToken = await storage.getString('access_token');
-    bool authenticated = !JwtDecoder.isExpired(accessToken!);
-    if (authenticated) {
-      final response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $accessToken',
-        },
-      );
-      var parsedData = json.decode(response.body);
-      if (response.statusCode == 200) {
-        setState(() {
-          _firstName.text = parsedData["data"]["firstName"];
-          _lastName.text = parsedData["data"]["lastName"];
-          _usernameCtrl.text = parsedData["data"]["username"];
-          _emailCtrl.text = parsedData["data"]["email"];
-          _role.text = parsedData["data"]["role"];
-          var age = parsedData["data"]["age"];
-          _age.text = age.toString();
-        });
-      } else if (response.statusCode == 403 || response.statusCode == 401) {
-        context.router.push(LoginRoute(onResult: (bool) {}));
-      }
+    await userService.getData();
+    print("wwwwwwwwwww");
+    print(userService.userProfile?.statuscode);
+    if (userService.userProfile?.statuscode == 200) {
+      setState(() {
+        _firstName.text = userService.userProfile?.FirstName ?? '';
+        _lastName.text = userService.userProfile?.LastName ?? '';
+        _usernameCtrl.text = userService.userProfile?.UserName ?? '';
+        _emailCtrl.text = userService.userProfile?.Email ?? '';
+        _role.text = userService.userProfile?.Role ?? '';
+        _age.text = userService.userProfile?.Age ?? '';
+      });
     } else {
       context.router.push(LoginRoute(onResult: (bool) {}));
     }

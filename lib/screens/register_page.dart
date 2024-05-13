@@ -47,15 +47,11 @@ class _UserProfileState extends State<RegisterPage> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(parsedData["error"]["message"])));
       }
-      print("abcabaaabbabababababa");
-      print(response.body);
       // ignore: use_build_context_synchronously
       String? token = parsedData["data"]["token"];
       storage.setString('access_token', token!);
       context.router.push(const EditUserRoute());
     } else {
-      print("ddddddddddddda");
-      print(response.body);
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(parsedData["error"]["errors"][0]["message"])));
     }

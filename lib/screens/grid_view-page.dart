@@ -30,7 +30,10 @@ class _DataTableState extends State<GridViewPage> {
   Future<void> fetchData() async {
     final storage = await SharedPreferences.getInstance();
     var accessToken = await storage.getString('access_token');
-    bool authenticated = !JwtDecoder.isExpired(accessToken!);
+    bool authenticated = false;
+    if (accessToken != null) {
+      authenticated = !JwtDecoder.isExpired(accessToken);
+    }
     if (authenticated) {
       final response = await http.get(
         url,
@@ -62,14 +65,12 @@ class _DataTableState extends State<GridViewPage> {
         context.router.push(LoginRoute(onResult: (bool) {}));
       }
     } else {
-      print("qwqweqwqwewqqwewqewq");
       context.router.push(LoginRoute(onResult: (bool) {}));
     }
   }
 
   _save() async {
-    print("object123123123");
-    final storage = await SharedPreferences.getInstance();
+    print("1211111111");
   }
 
   /// Create a Key for EditableState
@@ -87,38 +88,42 @@ class _DataTableState extends State<GridViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
+        body: Column(
+      children: [
+        const Text(
           "Editable DataTable",
+          style: TextStyle(fontSize: 20),
         ),
-      ),
-      body: Editable(
-        key: _editableKey,
-        columns: cols,
-        borderWidth: 1,
-        rows: rows,
-        zebraStripe: false,
-        onRowSaved: (value) {
-          _save();
-        },
-        onSubmitted: (value) {
-          _save();
-        },
-        tdStyle: const TextStyle(fontSize: 16),
-        trHeight: 80,
-        thStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        thAlignment: TextAlign.center,
-        thVertAlignment: CrossAxisAlignment.center,
-        thPaddingBottom: 2,
-        showSaveIcon: true,
-        saveIconColor: Colors.black,
-        showCreateButton: false,
-        tdAlignment: TextAlign.left,
-        tdEditableMaxLines: 100, // don't limit and allow data to wrap
-        tdPaddingTop: 0,
-        tdPaddingLeft: 10,
-        tdPaddingRight: 8,
-      ),
-    );
+        Expanded(
+          child: Editable(
+            key: _editableKey,
+            columns: cols,
+            borderWidth: 1,
+            rows: rows,
+            zebraStripe: false,
+            onRowSaved: (value) {
+              _save();
+            },
+            onSubmitted: (value) {
+              _save();
+            },
+            tdStyle: const TextStyle(fontSize: 16),
+            trHeight: 80,
+            thStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            thAlignment: TextAlign.center,
+            thVertAlignment: CrossAxisAlignment.center,
+            thPaddingBottom: 2,
+            showSaveIcon: true,
+            saveIconColor: Colors.black,
+            showCreateButton: false,
+            tdAlignment: TextAlign.left,
+            tdEditableMaxLines: 100, // don't limit and allow data to wrap
+            tdPaddingTop: 0,
+            tdPaddingLeft: 10,
+            tdPaddingRight: 8,
+          ),
+        )
+      ],
+    ));
   }
 }
